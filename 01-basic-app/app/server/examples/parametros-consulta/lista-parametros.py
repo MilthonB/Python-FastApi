@@ -4,7 +4,8 @@ from fastapi import FastAPI, Query
 
 app = FastAPI()
 
-
+#Documentación
+#https://fastapi.tiangolo.com/es/tutorial/query-params-str-validations/
 
 # Consultar lista de parámetros / valores múltiples
 # puede declararlo Optional[List[str]] para recibir una lista de valores, o dicho de otra manera, para recibir múltiples valores.
