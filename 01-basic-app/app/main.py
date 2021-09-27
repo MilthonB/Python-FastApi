@@ -147,6 +147,7 @@ async def read_items(q: str = Query(..., min_length=3)):
 
 
 
+
 @app.get("/items/{item_id}")
 async def read_item(item_id: str, q: Optional[str] = None):#parametros opcionales
     if q:
