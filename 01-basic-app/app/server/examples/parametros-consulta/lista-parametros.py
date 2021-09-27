@@ -48,3 +48,31 @@ Respuesta
 async def read_items(q: list = Query([])):
     query_items = {"q": q}
     return query_items
+
+#Agregar más metadatos
+# Esta información solo se podra visualizar en OpenApi en el http://127.0.0.1:{port}/docs# revisar documentación 
+@app.get("/items/metadatos")
+async def read_items(
+    q: Optional[str] = Query(None, title="MOSTRAR INFORMACIÓN", description="Query string for the items to search in the database that have a good match",min_length=3)
+):
+    results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
+    if q:
+        results.update({"q": q})
+    return results
+
+
+# Parámetros de alias
+# Dentro de un query param los identificadores como item-query no son reconocidos por python por la separación del guion lo que python podría leer es sería item_query
+# con un guion bajo, eso si lo podría entender python 
+# Pero si aún así tienes una valor que no puede leer python como ese, entonces es donde entra el alias de la función Query()
+#ejemplo: http://127.0.0.1:8000/items/?item-query=foobaritems
+
+@app.get("/items/")
+async def read_items(q: Optional[str] = Query(None, alias="item-query")):
+    results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
+    if q:
+        results.update({"q": q})
+    return results
+
+# Desactivación de parámetros
+
