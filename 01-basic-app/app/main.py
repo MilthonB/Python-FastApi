@@ -40,6 +40,26 @@ fake_items_db = [{
     "item_name": "Baz"
 }]
 
+#También puedes declarar tipos bool y serán convertidos:
+#http://127.0.0.1:8000/items/foo?short=1
+#http://127.0.0.1:8000/items/params?short=True
+#http://127.0.0.1:8000/items/params?short=true
+#http://127.0.0.1:8000/items/params?short=on
+#http://127.0.0.1:8000/items/params?short=yes
+# o cualquier otra variación (mayúsculas, primera letra en mayúscula, etc.) tu función verá el parámetro short con un valor bool de True. Si no, lo verá como False.
+
+
+@app.get("/items/params/{item_id}")
+async def read_item(item_id: str, q: Optional[str] = None, short: bool = False):
+    item = {"item_id": item_id}
+    if q:
+        item.update({"q": q})
+    if not short:
+        item.update(
+            {"description": "This is an amazing item that has a long description"}
+        )
+    return item
+
 @app.get("/items/")
 async def read_items(skip:int=0,limit:int=10):#parametros por defecto en
     print(fake_items_db[skip: skip + limit])
