@@ -7,12 +7,17 @@ app = FastAPI()
 
 # Como el Query el Path tambien tiene que ser importado desde fastapi para poder usarlo
 # Path(..., title) los tres punto lo vuelve un parametro obligatorio, pero no importa si tiene un None ya que para ingresar a esa ruta necesesita si o si el item_id
-# También se pueden declarar más metadatos así como en el query 
+# También se pueden declarar más metadatos así como en el query
 
-@app.get("/items/{item_id}")
+#El asterisco indica que la unicamanera de asignar valor a los parametrso de la funcion read_items es mandado la llave y el valor ejemplo:
+#obj = {'item_id':5,'q':'Holamnundo'}
+# read_items(**obj)
+@app.get("/items/validaciones/{item_id}")
 async def read_items(
-    q: str,
-    item_id: int = Path(..., title="The ID of the item to get"),
+    *, item_id: int = Path(..., title="The ID of the item to get"), q: str # esta es otra opción para que no muestre el error de q:str y enton hace que los valores
+    # se llamen con la palabra clave kwargs  
+    # q: str,
+    # item_id: int = Path(..., title="The ID of the item to get"),
 ):
     results = {"item_id": item_id}
     if q:
@@ -20,8 +25,7 @@ async def read_items(
     return results
 
 
-
-# Si la estructura de tu peticion se encuentra así python se quejara 
+# Si la estructura de tu peticion se encuentra así python se quejara
 # Tiene que tener un valor declarado antes del path el q
 # @app.get("/items/{item_id}")
 # async def read_items(
