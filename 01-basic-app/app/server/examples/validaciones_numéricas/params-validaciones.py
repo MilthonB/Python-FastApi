@@ -38,8 +38,6 @@ async def read_items(
 
 #mayor que 
 #Menor o igual 
-# gt: greater than
-# le: less than or equal
 @app.get("/items/mayor/menor{item_id}")
 async def read_items(
     *,
@@ -51,7 +49,20 @@ async def read_items(
         results.update({"q": q})
     return results
 
-
+#Validadores a float
+# gt: greater than
+# lt: less than
+@app.get("/items/{item_id}")
+async def read_items(
+    *,
+    item_id: int = Path(..., title="The ID of the item to get", ge=0, le=1000),
+    q: str,
+    size: float = Query(..., gt=0, lt=10.5)
+):
+    results = {"item_id": item_id}
+    if q:
+        results.update({"q": q})
+    return results
 
 # Si la estructura de tu peticion se encuentra así python se quejara
 # Tiene que tener un valor declarado antes del path el q
