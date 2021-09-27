@@ -60,6 +60,14 @@ async def read_item(item_id: str, q: Optional[str] = None, short: bool = False):
         )
     return item
 
+# Parámetros de query requeridos
+# Aquí el parámetro de query needy es un parámetro de query requerido, del tipo str.
+# Por supuesto que también puedes definir algunos parámetros como requeridos, con un valor por defecto y otros completamente opcionales:
+@app.get("/items/needy/{item_id}")
+async def read_user_item(  item_id: str, needy: str, skip: int = 0, limit: Optional[int] = None):
+    item = {"item_id": item_id, "needy": needy}
+    return item
+
 @app.get("/items/")
 async def read_items(skip:int=0,limit:int=10):#parametros por defecto en
     print(fake_items_db[skip: skip + limit])
