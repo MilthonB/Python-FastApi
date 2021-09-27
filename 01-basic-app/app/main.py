@@ -130,6 +130,20 @@ async def read_items(q: Optional[str] = Query(None, min_length=3, max_length=50,
     return results
 
 
+from fastapi import FastAPI, Query
+
+app = FastAPI()
+
+# Operador ellipsis
+#Se puede utilizar de algunas otras maneras, pero en este caso lo que hace es hacer obligatorio el query, Query (...,min_length=3)
+# Esto le permitirá a FastAPI saber que este parámetro es obligatorio.
+@app.get("/ellipsis/query/items/")
+async def read_items(q: str = Query(..., min_length=3)):
+    results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
+    if q:
+        results.update({"q": q})
+    return results
+
 
 
 
