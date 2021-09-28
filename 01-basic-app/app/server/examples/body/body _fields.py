@@ -8,6 +8,7 @@ from pydantic import BaseModel, Field
 app = FastAPI()
 
 
+# Fieldfunciona de la misma manera que Query, Pathy Bodytiene los mismos parámetros, etc.
 class Item(BaseModel):
     name: str
     description: Optional[str] = Field(
