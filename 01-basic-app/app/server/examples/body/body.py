@@ -1,6 +1,6 @@
 from typing import Optional
 
-from fastapi import FastAPI, Path
+from fastapi import FastAPI, Path,Body
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -57,3 +57,32 @@ Respuesta
     }
 }"""
 
+# Query y Path son para definir datos adicionales   
+
+#Valores sigulares en el body
+@app.put("/body/singular/items/{item_id}")
+async def update_item(
+    item_id: int, item: Item, user: User, importance: int = Body(...) # valor singular en el body 
+):
+    results = {"item_id": item_id, "item": item, "user": user, "importance": importance}
+    return results
+
+
+"""
+Respuesta
+{
+    "item_id": 456,
+    "item": {
+        "name": "Basura",
+        "description": "Basua organica",
+        "price": 250.85,
+        "tax": 560.54
+    },
+    "user": {
+        "username": "Milthon",
+        "full_name": "Milthon B"
+    },
+    "importance": 45
+}
+
+"""
