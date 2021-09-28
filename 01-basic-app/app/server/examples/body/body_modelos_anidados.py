@@ -1,4 +1,4 @@
-from typing import List, Optional, Set
+from typing import List, Optional, Set,Dict
 
 from fastapi import FastAPI
 from pydantic import BaseModel, HttpUrl
@@ -48,6 +48,35 @@ class Offer(BaseModel):
 @app.post("/post/offers/")
 async def create_offer(offer: Offer):
     return offer
+
+
+class Image(BaseModel):
+    url: HttpUrl
+    name: str
+
+@app.post("/images/multiple/")
+async def create_multiple_images(images: List[Image]):# Tambien se puede declarar una anidacón desde los parametros 
+    return images
+# No podría obtener este tipo de soporte de editor si estuviera trabajando directamente con dictmodelos Pydantic en lugar de.
+# los dictados entrantes se convierten automáticamente y su salida también se convierte automáticamente a JSON.
+
+
+#En este caso, aceptaría cualquiera dictsiempre que tenga intclaves con floatvalores:
+@app.post("/index-weights/")
+async def create_index_weights(weights: Dict[int, float]): # Si en la peticion se envia un str con el número entonces solo se parsea y se convierte a int 
+    # si no mandas un número y en su lugar mandas una letra entonces marcara un erro de que el valor no es int
+    print(weights)
+    return weights
+
+# Marca error
+# {
+#     "dsaf":1.25
+# }
+
+# Pasa y hace parsing al 1 string y lo vuele int
+# {
+#     "1":1.25
+# }
 
 
 @app.put("/anidados/items/{item_id}")
