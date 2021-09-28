@@ -86,3 +86,48 @@ Respuesta
 }
 
 """
+
+# Múltiples parámetros corporales y consultas
+@app.put("/params/query/items/{item_id}")
+async def update_item(
+    *,
+    item_id: int,
+    item: Item,
+    user: User,
+    importance: int = Body(..., gt=0),
+    q: Optional[str] = None
+):
+    results = {"item_id": item_id, "item": item, "user": user, "importance": importance}
+    if q:
+        results.update({"q": q})
+    return results
+
+
+#  Obtener un JSON con una clave item y dentro de él el contenido del modelo
+@app.put("/embed/items/{item_id}")
+async def update_item(item_id: int, item: Item = Body(..., embed=True)):
+    results = {"item_id": item_id, "item": item}
+    return results
+
+"""
+Respuesta con embed true
+{
+    "item_id": 86,
+    "item": { 
+        "name": "Basura",
+        "description": "Basua organica",
+        "price": 250.85,
+        "tax": 560.54
+    }
+}
+
+sin embed true
+    "item_id": 86,
+    { 
+        "name": "Basura",
+        "description": "Basua organica",
+        "price": 250.85,
+        "tax": 560.54
+    }
+
+"""
