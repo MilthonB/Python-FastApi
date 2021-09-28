@@ -1,11 +1,9 @@
 from typing import Optional
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Body
 from pydantic import BaseModel,  Field
 
 app = FastAPI()
-    
-
 
 
 # Pydantic schema_extra
@@ -18,7 +16,8 @@ class Item(BaseModel):
     price: float
     tax: Optional[float] = None
 
-    class Config:# esta información se muestra en los docs localhost:{port}/docs
+    # esta información se muestra en los docs localhost:{port}/docs
+    class Config:
         schema_extra = {
             "example": {
                 "name": "Foo",
@@ -29,9 +28,19 @@ class Item(BaseModel):
         }
 
 
-#usando Field puede agregar o añadir example para cada campo 
+# usando Field puede agregar o añadir example para cada campo
 # esto se mostrara en localhos docs
 # los datos se muestra igual
+# Al usar cualquiera de:
+#
+# Path()
+# Query()
+# Header()
+# Cookie()
+# Body()
+# Form()
+# File()
+# también puede declarar un dato example
 class Item2(BaseModel):
     name: str = Field(..., example="Foo")
     description: Optional[str] = Field(None, example="A very nice Item")
@@ -44,6 +53,22 @@ async def update_item(item_id: int, item: Item):
     results = {"item_id": item_id, "item": item}
     return results
 
+
+@app.put("/put/body/items/{item_id}")
+async def update_item(
+    item_id: int,
+    item: Item = Body(
+        ...,
+        example={
+            "name": "Foo",
+            "description": "A very nice Item",
+            "price": 35.4,
+            "tax": 3.2,
+        },
+    ),
+):
+    results = {"item_id": item_id, "item": item}
+    return results
 
 
 @app.put("/schema/items/{item_id}")
