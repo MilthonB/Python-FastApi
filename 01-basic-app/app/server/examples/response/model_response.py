@@ -38,6 +38,10 @@ items = {
 }
 
 
-@app.get("/exclude/items/{item_id}", response_model=Item, response_model_exclude_unset=True)
+# También puede utilizar los parámetros del decorador de operaciones de rutaresponse_model_include y response_model_exclude.
+# @app.get("/exclude/items/{item_id}", response_model=Item, response_model_exclude_unset=True)
+# @app.get("/exclude/items/{item_id}", response_model=Item, response_model_include={"name", "description"},)
+# @app.get("/exclude/items/{item_id}", response_model=Item, response_model_exclude={"tax"})  
+@app.get("/exclude/items/{item_id}", response_model=Item, response_model_exclude=["tax"]) # Es un set por default pero si mandas un [] fastapi lo convertira a set  
 async def read_item(item_id: str):
     return items[item_id]
