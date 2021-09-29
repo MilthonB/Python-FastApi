@@ -1,5 +1,11 @@
-from fastapi import FastAPI, HTTPException, Request
+# from fastapi import FastAPI, HTTPException, Request
+# from fastapi.responses import JSONResponse
+
+from fastapi import FastAPI, Request, status, HTTPException
+from fastapi.encoders import jsonable_encoder
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 
 # Puede agregar un controlador de excepciones personalizado con @app.exception_handler():
 class UnicornException(Exception): #clase de expetiones de forma global
@@ -28,8 +34,26 @@ items = {"foo": "The Foo Wrestlers"}
 # Podrías pasar a dict, a list, etc.
 # FastAPI los maneja automáticamente y los convierte a JSON.
 
-@app.get("/items/{item_id}")
+@app.get("/details/items/{item_id}")
 async def read_item(item_id: str):
     if item_id not in items:
         raise HTTPException(status_code=404, detail={ 'ok': False, 'msg':'Ocurrio un error' }, headers={'x-toke':'No se proveyó un token válido'} )
     return {"item": items[item_id]}
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    return JSONResponse(
+        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        content=jsonable_encoder({"detalles": exc.errors(), "request-body": exc.body}),
+    )
+
+
+class Item(BaseModel):
+    title: str
+    size: int
+
+
+@app.post("/http/request/items/")
+async def create_item(item: Item):
+    return item
