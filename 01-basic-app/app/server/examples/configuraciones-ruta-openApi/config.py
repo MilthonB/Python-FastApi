@@ -31,7 +31,7 @@ async def create_item(item: Item):
     return item
 
 
-@app.get("/it/items/", tags=["items"])
+@app.get("/it/items/", tags=["items"], deprecated=True) #deprecate siver para volver o señalas la app get como obsolote
 async def read_items():
     return [{"name": "Foo", "price": 42}]
 
@@ -46,6 +46,7 @@ async def read_users():
     response_model=Item,
     summary="Create an itemess",
     description="Create an item with all the information, name, description, price, tax and a set of unique tags",
+    response_description="The created item", # da una descripcion a la respuesta 
 ) # más informacion a la documentacion de la api 
 async def create_item(item: Item):
     return item
