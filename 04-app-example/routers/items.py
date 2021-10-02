@@ -5,7 +5,7 @@ router = APIRouter(
     prefix="/items",
     tags=["items"],
     dependencies=[Depends(get_token_header)],
-    responses={404: {"Ejemplo": "Error"}}, # Qué funcion tiene este response?
+    responses={404: {"Ejemplo": "Error"}}, # Se pede agregar un modelo de respuesta para todos este es un ejemplo que no hace nada 
 )
 
 fake_items_db = {"plumbus": {"name": "Plumbus"}, "gun": {"name": "Portal Gun"}}
@@ -26,11 +26,7 @@ async def read_item(item_id: str):
         })
     return {"name": fake_items_db[item_id]["name"], "item_id": item_id}
 
-@router.put(
-    "/{item_id}",
-    tags=["custom"],
-    responses={403: {"description": "Operation forbidden 123"}},
-)
+@router.put("/{item_id}", tags=["custom"])
 async def update_item(item_id: str):
     if item_id != "plumbus":
         raise HTTPException(
