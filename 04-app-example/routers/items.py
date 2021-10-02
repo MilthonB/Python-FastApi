@@ -5,7 +5,7 @@ router = APIRouter(
     prefix="/items",
     tags=["items"],
     dependencies=[Depends(get_token_header)],
-    responses={404: {"Ejemplo": "Error"}},
+    responses={404: {"Ejemplo": "Error"}}, # Qué funcion tiene este response?
 )
 
 fake_items_db = {"plumbus": {"name": "Plumbus"}, "gun": {"name": "Portal Gun"}}
