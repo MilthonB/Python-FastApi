@@ -87,7 +87,8 @@ async def actualizar_data(alumno_id:str = Param(...)):
     }
 @app.get('/get/all/', response_model=List[DB_out])
 async def get_todo():
-    get_alumnos = db.coleccion_alumnos.find({})
+    # get_alumnos = db.coleccion_alumnos.find({})
+    get_alumnos = db.coleccion_alumnos.find({},limit=5, skip=0)
     alumnos = [alumno for alumno in get_alumnos]
     return alumnos
     
