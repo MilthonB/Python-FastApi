@@ -44,7 +44,7 @@ class DB(BaseModel): # Documento para pasar a la base de datos
     activo: Optional[bool] = True 
 
 
-class DB_out(DB): # Documento para pasar a la base de datos 
+class DB_out(DB): 
     id: Optional[PyObjectId] = Field(alias='_id')
 
     class Config:
@@ -68,9 +68,16 @@ async def obtener_data(alumno_id:str = Param(...)):
 
 
 @app.put('/put/{alumno_id}')
-async def actualizar_data():
+async def actualizar_data(alumno_id:str = Param(...)):
+    
     ...
 
-@app.delete('/delete/{alumno_id}')
-async def actualizar_data():
-    ...
+@app.delete('/delete/{alumno_id}', response_model=DB_out)
+async def actualizar_data(alumno_id:str = Param(...)):
+    antes_alumno = db.coleccion_alumnos.find_one({'_id':ObjectId(alumno_id)})
+    print(type(antes_alumno))
+    alumnos = db.coleccion_alumnos.delete_one({'_id':ObjectId(alumno_id)})
+    return {
+        **antes_alumno
+    }
+    
