@@ -67,10 +67,15 @@ async def obtener_data(alumno_id:str = Param(...)):
     return alumnos
 
 
-@app.put('/put/{alumno_id}')
+@app.put('/put/{alumno_id}', response_model=DB_out)
 async def actualizar_data(alumno_id:str = Param(...)):
+    antes_alumno = db.coleccion_alumnos.find_one({'_id':ObjectId(alumno_id)})
+    query = { '$set':{'nombre':'Colegita'}}
+    alumnos = db.coleccion_alumnos.update_one({'_id':ObjectId(alumno_id)}, query)
     
-    ...
+    return {
+        **antes_alumno
+    }
 
 @app.delete('/delete/{alumno_id}', response_model=DB_out)
 async def actualizar_data(alumno_id:str = Param(...)):
