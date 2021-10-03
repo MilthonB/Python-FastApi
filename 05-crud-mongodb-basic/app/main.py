@@ -20,7 +20,7 @@ app = FastAPI(
 
 db = Conexion()
 
-# Esto no se para que sirve aúns
+# Solucionado
 class PyObjectId(ObjectId):
     
     @classmethod
