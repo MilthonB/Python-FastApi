@@ -1,10 +1,8 @@
 
-import fastapi
-
+# import uvicorn
 
 from fastapi import FastAPI
 from routes import usuarios,uploads_img
-import uvicorn
 
 app = FastAPI()
 
@@ -12,7 +10,5 @@ app = FastAPI()
 app.include_router(usuarios.router)
 app.include_router(uploads_img.router)
 
-
-# if __name__ == '__main__':
-#     print('Hola mundo ')
-#     uvicorn.run(app, port=4500, host='localhost')
+# if __name__ == "__main__":
+#     uvicorn.run(app, host="0.0.0.0", port=4500, reload=False) 
