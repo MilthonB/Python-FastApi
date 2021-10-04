@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, SecretStr, FilePath, Field
+from pydantic import BaseModel, EmailStr, SecretStr, Field
 from typing import Optional
 
 class Usuarios_Base(BaseModel):

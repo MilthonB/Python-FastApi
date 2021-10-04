@@ -1,6 +1,7 @@
 
-from fastapi import APIRouter, Body, Path
+from fastapi import APIRouter, Body, Path, UploadFile, File
 from typing import Optional, List
+
 from controllers.usuarios import Usuarios
 from models import usuario as usuario_model
 
@@ -32,7 +33,7 @@ async def usuario_put( id_usuario:int = Path(...), body = Body(...) ):
     return usuario.update_usuario(1, body)
 
 @router.post('/post/')
-async def usuario_post(body: usuario_model.Usuario_In = Body(...)):
+async def usuario_post(body: usuario_model.Usuario_In = Body(..., embed=True)):
     return usuario.post_usuario(body)
 
 @router.delete('/delete/{id_usuario}')
