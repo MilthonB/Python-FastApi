@@ -8,7 +8,7 @@ from pymongo.collection import Collection
 class Conexion(object):
 
     def __init__(self):
-        self.__uri = f'aquiva la uri de tu basde de mongo'
+        self.__uri = f'aquiva la uri de tu basde de mongo '
         self.__client = MongoClient(self.__uri)
         self.__data_base = self.__client.fastApi
 
