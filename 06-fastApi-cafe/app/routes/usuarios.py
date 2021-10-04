@@ -1,8 +1,8 @@
 
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, Path
 from typing import Optional, List
-from fastapi.params import Param
 from controllers.usuarios import Usuarios
+from models import usuario as usuario_model
 
 router = APIRouter(
     prefix='/usuarios',
@@ -21,19 +21,20 @@ Dependencias:
     jwt válido también en el delete
 """
 
+#Señalar cuando no esta el path element dentro del path principal
 
 @router.get('/get/')
 async def usuarios_get():
     return usuario.get_usuarios()
 
 @router.put('/put/{id_usuario}')
-async def usuario_put( id_usuario:int = Param(...) ):
-    ...
+async def usuario_put( id_usuario:int = Path(...), body = Body(...) ):
+    return usuario.update_usuario(1, body)
 
 @router.post('/post/')
-async def usuario_post(body= Body(...)):
-    return body
+async def usuario_post(body: usuario_model.Usuario_In = Body(...)):
+    return usuario.post_usuario(body)
 
 @router.delete('/delete/{id_usuario}')
-async def usuario_delete(id_usuario:int = Param(...) ):
-    ...
+async def usuario_delete(id_usuario:int = Path(...) ):
+    return usuario.delete_usuario(1)

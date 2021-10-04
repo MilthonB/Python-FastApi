@@ -4,7 +4,7 @@ from models import usuario
 
 class Usuarios(object):
 
-    def post_usuario(self, body: usuario.Usuario ):
+    def post_usuario(self, body: usuario.Usuario_In ):
         return{
             'msg':'Hola soy un método post'
         }

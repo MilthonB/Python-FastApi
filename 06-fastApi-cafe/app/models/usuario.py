@@ -9,7 +9,7 @@ class Usuarios_Base(BaseModel):
     estado: Optional[bool] = True
     google: Optional[bool] = False
 
-class Usuario(Usuarios_Base):
+class Usuario_In(Usuarios_Base):
     password: SecretStr = Field(..., min_length=6)
 
 class Usuario_Out(Usuarios_Base):
