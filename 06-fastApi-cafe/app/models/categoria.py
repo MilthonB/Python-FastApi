@@ -6,7 +6,7 @@ from helpers.pyobjectId import PyObjectId
 class Categorias_Base(BaseModel):
     nombre: str
     estado: Optional[bool] = True
-    usuario: ObjectId() 
+    usuario: PyObjectId 
 
 class Categorias_Out(Categorias_Base):
     id: Optional[PyObjectId] = Field(alias='_id')

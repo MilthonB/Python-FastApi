@@ -8,10 +8,10 @@ class Conexion(object):
 
     @lru_cache()
     def __init__(self):
-        print('conectado', mongodb)
         self.__uri = mongodb
         self.__client = MongoClient(self.__uri)
         self.__data_base = self.__client.Cafe_fastapi
+        print('conectado db')
 
     @property
     def coleccion_usuarios(self):

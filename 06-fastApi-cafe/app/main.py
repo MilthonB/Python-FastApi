@@ -2,7 +2,7 @@
 # import uvicorn
 
 from fastapi import FastAPI
-from routes import usuarios,uploads_img
+from routes import usuarios,uploads_img, categorias
 from db.config import db
 
 app = FastAPI()
@@ -10,6 +10,7 @@ app = FastAPI()
 
 
 app.include_router(usuarios.router)
+# app.include_router(categorias.router)
 app.include_router(uploads_img.router)
 
 # if __name__ == "__main__":
