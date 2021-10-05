@@ -1,5 +1,5 @@
 from bson.objectid import ObjectId
-from fastapi.param_functions import Body
+from fastapi import Body, HTTPException
 from models import usuario
 from db.config import db
 
@@ -27,22 +27,36 @@ class Usuarios(object):
         return resp
     
     def get_usuarios(self, limit:int, skip:int) :
-        usuarios = [x for x in self.coleccion.find({}, limit=limit, skip=skip)]
+        usuarios = [usuario for usuario in self.coleccion.find({}, limit=limit, skip=skip) if usuario['estado'] == True]
+     
         return usuarios
 
     def get_usuario(self, id: str) :
         usuario = self.coleccion.find_one({'_id': ObjectId(id)})
+        if usuario['estado'] == False:
+            raise HTTPException(status_code=400, detail={
+                'ok': False,
+                'msg':'El usuario no existe'
+            })
         return usuario
 
     def update_usuario(self,id: str, body: Body):
-        
-        return{
-            'msg':'Hola soy un método update'
-        }
 
-    def delete_usuario(self,id: str):
-        return{
-            'msg':'Hola soy un método delete'
-        }
+        if type(body) is not dict:
+            raise HTTPException(status_code=400, detail={
+                'msg':'El cuerpo del body no es un objeto o diccinario'
+            })
+        
+        self.coleccion.find_one_and_update({'_id': ObjectId(id)}, {'$set':body})
+        usuario = self.coleccion.find_one({'_id': ObjectId(id)})
+        return usuario
+
+    def delete_usuario(self, id: str):
+
+        # usuario = self.coleccion.find_one_and_delete({'_id': ObjectId(id)})
+        self.coleccion.find_one_and_update({'_id': ObjectId(id)}, {'$set':{'estado':False}})
+        usuario = self.coleccion.find_one({'_id': ObjectId(id)})
+
+        return usuario
 
 
