@@ -20,21 +20,21 @@ class Usuarios(object):
             'msg':'Hola soy un método post'
         }
     
-    def get_usuarios(self,) :
+    def get_usuarios(self) :
         return{
             'msg':'Hola soy un método get'
         }
 
-    def get_usuario(self,) :
+    def get_usuario(self, id: str) :
         return{
             'msg':'Hola soy un método get'
         }
-    def update_usuario(self,id_usuario: int, body: Body):
+    def update_usuario(self,id: str, body: Body):
         return{
             'msg':'Hola soy un método update'
         }
 
-    def delete_usuario(self,id_usuario: int):
+    def delete_usuario(self,id: str):
         return{
             'msg':'Hola soy un método delete'
         }

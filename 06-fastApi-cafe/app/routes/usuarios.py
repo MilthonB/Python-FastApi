@@ -1,9 +1,10 @@
 
-from fastapi import APIRouter, Body, Path, UploadFile, File
+from fastapi import APIRouter, Body, Path, Depends
 from typing import Optional, List
 
 from controllers.usuarios import Usuarios
 from models import usuario as usuario_model
+from helpers.dependencias.dependencias_generales import verify_mongoId 
 
 
 
@@ -30,14 +31,18 @@ Dependencias:
 async def usuarios_get():
     return usuario.get_usuarios()
 
-@router.put('/put/{id_usuario}')
-async def usuario_put( id_usuario:int = Path(...), body = Body(...) ):
-    return usuario.update_usuario(1, body)
+@router.get('/get/{id}', dependencies=[Depends(verify_mongoId)])
+async def usuario_get(id:str = Path(...)):
+    return usuario.get_usuario(id)
+
+@router.put('/put/{id}', dependencies=[Depends(verify_mongoId)])
+async def usuario_put( id:str = Path(...), body = Body(...) ):
+    return usuario.update_usuario(id, body)
 
 @router.post('/post/')
 async def usuario_post(body: usuario_model.Usuario_In = Body(..., embed=True)):
     return usuario.post_usuario(body)
 
-@router.delete('/delete/{id_usuario}')
-async def usuario_delete(id_usuario:int = Path(...) ):
+@router.delete('/delete/{id}', dependencies=[Depends(verify_mongoId)])
+async def usuario_delete(id:str = Path(...) ):
     return usuario.delete_usuario(1)
