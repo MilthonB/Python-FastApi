@@ -2,6 +2,8 @@
 from fastapi import APIRouter, Body, Path, Depends
 from typing import Optional, List
 
+from fastapi.param_functions import Query
+
 from controllers.usuarios import Usuarios
 from models import usuario as usuario_model
 from helpers.dependencias.dependencias_generales import verify_mongoId 
@@ -27,9 +29,9 @@ Dependencias:
 """
 #Señalar cuando no esta el path element dentro del path principal
 
-@router.get('/get/', response_model= usuario_model.Usuario_Out)
-async def usuarios_get():
-    return usuario.get_usuarios()
+@router.get('/get/', response_model= List[usuario_model.Usuario_Out])
+async def usuarios_get(limit:Optional[int] = Query(10), skip:Optional[int] = Query(0)):
+    return usuario.get_usuarios(limit, skip)
 
 @router.get('/get/{id}',response_model= usuario_model.Usuario_Out, dependencies=[Depends(verify_mongoId)])
 async def usuario_get(id:str = Path(...)):

@@ -16,25 +16,26 @@ Dependencias:
 
 class Usuarios(object):
 
-    def post_usuario(self, body: usuario.Usuario_In ):
+    def __init__(self):
+        self.coleccion = db.coleccion_usuarios
 
-        coleccion = db.coleccion_usuarios
-        id = coleccion.insert_one(body.dict()).inserted_id
-        
-        resp = coleccion.find_one({'_id':ObjectId(id)})
+    def post_usuario(self, body: usuario.Usuario_In ):
+    
+        id = self.coleccion.insert_one(body.dict()).inserted_id
+        resp = self.coleccion.find_one({'_id':ObjectId(id)})
 
         return resp
     
-    def get_usuarios(self) :
-        return{
-            'msg':'Hola soy un método get'
-        }
+    def get_usuarios(self, limit:int, skip:int) :
+        usuarios = [x for x in self.coleccion.find({}, limit=limit, skip=skip)]
+        return usuarios
 
     def get_usuario(self, id: str) :
-        return{
-            'msg':'Hola soy un método get'
-        }
+        usuario = self.coleccion.find_one({'_id': ObjectId(id)})
+        return usuario
+
     def update_usuario(self,id: str, body: Body):
+        
         return{
             'msg':'Hola soy un método update'
         }
