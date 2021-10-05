@@ -3,8 +3,10 @@
 
 from fastapi import FastAPI
 from routes import usuarios,uploads_img
+from db.config import db
 
 app = FastAPI()
+
 
 
 app.include_router(usuarios.router)
