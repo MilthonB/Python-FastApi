@@ -1,3 +1,4 @@
+from bson.objectid import ObjectId
 from fastapi.param_functions import Body
 from models import usuario
 from db.config import db
@@ -16,9 +17,13 @@ Dependencias:
 class Usuarios(object):
 
     def post_usuario(self, body: usuario.Usuario_In ):
-        return{
-            'msg':'Hola soy un método post'
-        }
+
+        coleccion = db.coleccion_usuarios
+        id = coleccion.insert_one(body.dict()).inserted_id
+        
+        resp = coleccion.find_one({'_id':ObjectId(id)})
+
+        return resp
     
     def get_usuarios(self) :
         return{

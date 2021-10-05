@@ -27,11 +27,11 @@ Dependencias:
 """
 #Señalar cuando no esta el path element dentro del path principal
 
-@router.get('/get/')
+@router.get('/get/', response_model= usuario_model.Usuario_Out)
 async def usuarios_get():
     return usuario.get_usuarios()
 
-@router.get('/get/{id}', dependencies=[Depends(verify_mongoId)])
+@router.get('/get/{id}',response_model= usuario_model.Usuario_Out, dependencies=[Depends(verify_mongoId)])
 async def usuario_get(id:str = Path(...)):
     return usuario.get_usuario(id)
 
@@ -39,7 +39,7 @@ async def usuario_get(id:str = Path(...)):
 async def usuario_put( id:str = Path(...), body = Body(...) ):
     return usuario.update_usuario(id, body)
 
-@router.post('/post/')
+@router.post('/post/', response_model=usuario_model.Usuario_Out)
 async def usuario_post(body: usuario_model.Usuario_In = Body(..., embed=True)):
     return usuario.post_usuario(body)
 
