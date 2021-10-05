@@ -27,7 +27,7 @@ class Categorias(object):
                 'ok': False,
                 'msg':'La categoria no existe'
             })
-        print(categoria)
+            
         return categoria
     
     

@@ -21,7 +21,7 @@ async def productos_get(limit:Optional[int] = Query(10), skip:Optional[int] = Qu
     resp = await producto.get_productos(limit, skip)
     return resp
 
-@router.get('/get/{id}',response_model= producto_model.Categorias_Out, dependencies=[Depends(verify_mongoId)])
+@router.get('/get/{id}',response_model= producto_model.Productos_Out, dependencies=[Depends(verify_mongoId)])
 async def producto_get(id:str = Path(...)):
     resp = await producto.get_producto(id) 
     return resp
