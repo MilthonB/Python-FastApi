@@ -5,6 +5,8 @@ from typing import Optional, List
 from controllers.usuarios import Usuarios
 from models import usuario as usuario_model
 
+
+
 router = APIRouter(
     prefix='/usuarios',
     tags=['Usuarios']
@@ -21,7 +23,6 @@ Dependencias:
     el correo tiene que ser un correo email válido
     jwt válido también en el delete
 """
-
 #Señalar cuando no esta el path element dentro del path principal
 
 @router.get('/get/')
