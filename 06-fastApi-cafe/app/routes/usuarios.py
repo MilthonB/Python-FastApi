@@ -7,6 +7,7 @@ from models import usuario as usuario_model
 
 
 
+
 router = APIRouter(
     prefix='/usuarios',
     tags=['Usuarios']
@@ -16,7 +17,7 @@ usuario = Usuarios()
 
 """ 
 Dependencias:
-    tiene que ser un id de mongo
+    tiene que ser un id de mongo => LISTO DEPENDENCIA CREADA 
     el id tiene que existir en la base de datos
     y el rol tiene que ser admin para poder hacert put post y delete
     contraseña tiene que tener un cierto rango 
