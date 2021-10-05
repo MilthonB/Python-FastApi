@@ -19,20 +19,26 @@ categoria = Categorias()
 
 @router.get('/get/', response_model= List[categoria_model.Categorias_Out])
 async def categorias_get(limit:Optional[int] = Query(10), skip:Optional[int] = Query(0)):
-    return categoria.get_categorias(limit, skip)
+    resp = await categoria.get_categorias(limit, skip)
+    return resp
 
 @router.get('/get/{id}',response_model= categoria_model.Categorias_Out, dependencies=[Depends(verify_mongoId)])
-async def usuario_get(id:str = Path(...)):
-    return categoria.get_categoria(id)
+async def categoria_get(id:str = Path(...)):
+    resp = await categoria.get_categoria(id) 
+    return resp
 
 @router.put('/put/{id}', response_model= categoria_model.Categorias_Out, dependencies=[Depends(verify_mongoId)])
 async def categoria_put( id:str = Path(...), body = Body(...) ):
-    return categoria.update_categoria(id, body)
+    resp = await categoria.update_categoria(id, body) 
+    return resp
 
 @router.post('/post/', response_model=categoria_model.Categorias_Out)
-async def usuario_post(body: categoria_model.Categorias_Base = Body(..., embed=True)):
-    return categoria.post_categoria(body)
+async def categoria_post(body: categoria_model.Categorias_Base = Body(..., embed=True)):
+    resp = await categoria.post_categoria(body)
+    return resp
+    # return categoria.post_categoria(body)
 
 @router.delete('/delete/{id}', response_model=categoria_model.Categorias_Out, dependencies=[Depends(verify_mongoId)])
 async def usuario_delete(id:str = Path(...) ):
-    return categoria.delete_categoria(id)
+    resp = await categoria.delete_categoria(id)
+    return resp

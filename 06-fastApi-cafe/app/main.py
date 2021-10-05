@@ -10,7 +10,7 @@ app = FastAPI()
 
 
 app.include_router(usuarios.router)
-# app.include_router(categorias.router)
+app.include_router(categorias.router)
 app.include_router(uploads_img.router)
 
 # if __name__ == "__main__":

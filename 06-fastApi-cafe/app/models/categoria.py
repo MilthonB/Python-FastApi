@@ -8,6 +8,8 @@ class Categorias_Base(BaseModel):
     estado: Optional[bool] = True
     usuario: PyObjectId 
 
+
+
 class Categorias_Out(Categorias_Base):
     id: Optional[PyObjectId] = Field(alias='_id')
 
