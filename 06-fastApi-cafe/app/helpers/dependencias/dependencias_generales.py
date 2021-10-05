@@ -10,12 +10,12 @@ def verify_coleccion(coleccion: str):
     if coleccion not in lista_colecciones:
         raise HTTPException(status_code=400,detail={
             'ok':False,
-            'msg':f'La coleccion ingresada no es valida. Colecciones válidas:${lista_colecciones}'
+            'msg':f'La coleccion ingresada no es valida. Colecciones válidas: {lista_colecciones}'
         })
 
-def verify_mongoId( id_usuario:str ):
-    if not ObjectId.is_valid(id_usuario):
+def verify_mongoId( id:str ):
+    if not ObjectId.is_valid(id):
         raise HTTPException(status_code=400,detail={
             'ok':False,
-            'msg':f'El id no es válido: ${lista_colecciones}'
+            'msg':f'El id no es válido: {id}'
         })

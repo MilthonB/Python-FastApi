@@ -17,18 +17,18 @@ lista_dependencias = [
 
 
 
-@router.get('/get/{id_usuario}')
-async def imagen_get(id_usuario: int = Path(...)):
-    return img.get_img(id_usuario)
+@router.get('/get/{id}')
+async def imagen_get(id: str = Path(...)):
+    return img.get_img(id)
 
 #update 
-@router.put('/put/{coleccion}/{id_usuario}', dependencies=lista_dependencias)
-async def imagen_update(coleccion:str = Path(...), id_usuario:str = Path(...), file: UploadFile = File(...)):
-    return img.update_img( coleccion, id_usuario )
+@router.put('/put/{coleccion}/{id}', dependencies=lista_dependencias)
+async def imagen_update(coleccion:str = Path(...), id:str = Path(...), file: UploadFile = File(...)):
+    return img.update_img( coleccion, id )
 
 #post 
-@router.post('/post/{coleccion}/{id_usuario}', dependencies=lista_dependencias)
-async def imagen_post(id_usuario:str = Path(...), coleccion:str = Path(...), file: UploadFile = File(...)):
-    return img.post_img( coleccion, id_usuario, file )
+@router.post('/post/{coleccion}/{id}', dependencies=lista_dependencias)
+async def imagen_post(id:str = Path(...), coleccion:str = Path(...), file: UploadFile = File(...)):
+    return img.post_img( coleccion, id, file )
 
 
