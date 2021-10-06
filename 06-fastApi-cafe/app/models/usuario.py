@@ -25,3 +25,7 @@ class Usuario_Out(Usuarios_Base):
         json_encoders = {
             ObjectId: str
         }
+
+class Usuario_update(BaseModel):
+    nombre: str
+    img: str
