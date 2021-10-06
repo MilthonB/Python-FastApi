@@ -47,19 +47,19 @@ class Usuarios(object):
             })
         return usuario
 
-    def update_usuario(self,id: str, body: usuario.Usuario_update):
+    async def update_usuario(self,id: str, body: usuario.Usuario_update):
 
-        if type(body) is not dict:
-            raise HTTPException(status_code=400, detail={
-                'msg':'El cuerpo del body no es un objeto o diccinario'
-            })
+        # if type(body) is not dict:
+        #     raise HTTPException(status_code=400, detail={
+        #         'msg':'El cuerpo del body no es un objeto o diccinario'
+        #     })
         
         # verificar y sacar los valores que no pueden ser modificados por el usuario 
         # No se puede modificar el esatado, ni la contraseñ(En este caso)
         # Solo se permite modificar el nombre y la img
         # El rol solo lo puede cambiar quien tenga permisos de admin
         
-        self.coleccion.find_one_and_update({'_id': ObjectId(id)}, {'$set':body})
+        self.coleccion.find_one_and_update({'_id': ObjectId(id)}, {'$set':body.dict()})
         usuario = self.coleccion.find_one({'_id': ObjectId(id)})
         return usuario
 

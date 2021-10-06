@@ -6,10 +6,7 @@ from fastapi.param_functions import Query
 
 from controllers.usuarios import Usuarios
 from models import usuario as usuario_model
-from helpers.dependencias.dependencias_generales import verify_mongoId 
-
-
-
+from helpers.dependencias.dependencias_generales import verify_mongoId, verify_id_In_bd
 
 router = APIRouter(
     prefix='/usuarios',
@@ -18,33 +15,28 @@ router = APIRouter(
 
 usuario = Usuarios()
 
-""" 
-Dependencias:
-    tiene que ser un id de mongo => LISTO DEPENDENCIA CREADA 
-    el id tiene que existir en la base de datos
-    y el rol tiene que ser admin para poder hacert put post y delete
-    contraseña tiene que tener un cierto rango 
-    el correo tiene que ser un correo email válido
-    jwt válido también en el delete
-"""
-#Señalar cuando no esta el path element dentro del path principal
+lista_depends = [
+    Depends(verify_mongoId), 
+    Depends(verify_id_In_bd)
+]
 
 @router.get('/get/', response_model= List[usuario_model.Usuario_Out])
 async def usuarios_get(limit:Optional[int] = Query(10), skip:Optional[int] = Query(0)):
     return usuario.get_usuarios(limit, skip)
 
-@router.get('/get/{id}',response_model= usuario_model.Usuario_Out, dependencies=[Depends(verify_mongoId)])
+@router.get('/get/{id}',response_model= usuario_model.Usuario_Out, dependencies=lista_depends)
 async def usuario_get(id:str = Path(...)):
     return usuario.get_usuario(id)
 
-@router.put('/put/{id}', response_model= usuario_model.Usuario_Out, dependencies=[Depends(verify_mongoId)])
-async def usuario_put( id:str = Path(...), body = Body(...) ):
-    return usuario.update_usuario(id, body)
+@router.put('/put/{id}', response_model= usuario_model.Usuario_Out, dependencies=lista_depends)
+async def usuario_put( id:str = Path(...), body:usuario_model.Usuario_update = Body(...) ):
+    resp = await usuario.update_usuario(id, body) 
+    return resp
 
 @router.post('/post/', response_model=usuario_model.Usuario_Out)
 async def usuario_post(body: usuario_model.Usuario_In = Body(..., embed=True)):
     return usuario.post_usuario(body)
 
-@router.delete('/delete/{id}', response_model=usuario_model.Usuario_Out, dependencies=[Depends(verify_mongoId)])
+@router.delete('/delete/{id}', response_model=usuario_model.Usuario_Out, dependencies=lista_depends)
 async def usuario_delete(id:str = Path(...) ):
     return usuario.delete_usuario(id)
