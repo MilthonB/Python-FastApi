@@ -16,6 +16,7 @@ class Productos(object):
         
     async def get_producto(self, id: str):
         producto = self.coleccion.find_one({'_id': ObjectId(id)})
+        
         if producto['estado'] == False:
             raise HTTPException(status_code=400, detail={
                 'ok': False,
