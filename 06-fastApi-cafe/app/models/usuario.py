@@ -1,3 +1,4 @@
+from enum import unique
 from bson import ObjectId
 from pydantic import BaseModel, EmailStr, SecretStr, Field
 from typing import Optional

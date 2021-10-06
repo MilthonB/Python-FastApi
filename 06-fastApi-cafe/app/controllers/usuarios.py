@@ -1,6 +1,7 @@
 from bson.objectid import ObjectId
 from fastapi import Body, HTTPException
 from passlib.hash import bcrypt
+import pymongo
 
 from models import usuario
 from db.config import db
@@ -22,16 +23,26 @@ class Usuarios(object):
         self.coleccion = db.coleccion_usuarios
 
     def post_usuario(self, body: usuario.Usuario_In ):
-        
         body_dict = body.dict()
-        password = body_dict['password']
-        pass_hash = bcrypt.hash(password)
-        body_dict.update({'password': pass_hash})
+        
+        try:
+            password = body_dict['password']
+            pass_hash = bcrypt.hash(password)
+            body_dict.update({'password': pass_hash})
 
-        id = self.coleccion.insert_one(body_dict).inserted_id
-        resp = self.coleccion.find_one({'_id':ObjectId(id)})
+            id = self.coleccion.insert_one(body_dict).inserted_id
+            resp = self.coleccion.find_one({'_id':ObjectId(id)})
 
-        return resp
+            return resp
+
+        except pymongo.errors.DuplicateKeyError:
+            correo = body_dict['correo']
+            raise HTTPException(status_code=400, detail={
+                'ok': False,
+                'msg': f'El correo: { correo } ya esta registrado'
+            })
+
+       
     
     def get_usuarios(self, limit:int, skip:int) :
         usuarios = [usuario for usuario in self.coleccion.find({}, limit=limit, skip=skip) if usuario['estado'] == True]

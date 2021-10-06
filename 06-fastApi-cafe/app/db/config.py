@@ -1,3 +1,4 @@
+from enum import unique
 from pymongo import MongoClient
 from functools import lru_cache
 from dotenv import dotenv_values
@@ -15,6 +16,7 @@ class Conexion(object):
 
     @property
     def coleccion_usuarios(self):
+        self.__data_base.usuarios.create_index('correo', unique=True)
         return self.__data_base.usuarios
 
     @property
