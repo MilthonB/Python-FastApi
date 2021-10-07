@@ -19,6 +19,7 @@ async def login( response: Response, body: Auth_In = Body(...) ):
     resp = await auth.login(body,response)
     return resp
 
+
 # @router.post("/cookie-and-object/")
 # def create_cookie(response: Response):
 #     print(response)
