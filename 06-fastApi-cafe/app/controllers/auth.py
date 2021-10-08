@@ -3,7 +3,7 @@ from passlib.hash import bcrypt
 
 from models.auth import Auth_In
 from db.config import db 
-from helpers.generar_jwt import jwt_encode
+from helpers.dependencia_jwt import jwt_encode
 
 class Auth(object):
     
