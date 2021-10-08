@@ -27,7 +27,8 @@ async def imagen_update(coleccion:str = Path(...), id:str = Path(...), file: Upl
     return img.update_img( coleccion, id )
 
 #post 
-@router.post('/post/{coleccion}/{id}', dependencies=[ Depends(depen.verify_type_img) ])
+lista_dependencias.append(Depends(depen.verify_type_img))
+@router.post('/post/{coleccion}/{id}', dependencies=lista_dependencias)
 async def imagen_post(id:str = Path(...), coleccion:str = Path(...), file: UploadFile = File(...)):
     return img.post_img( coleccion, id, file )
 

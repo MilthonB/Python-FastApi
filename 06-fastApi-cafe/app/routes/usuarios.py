@@ -38,6 +38,7 @@ async def usuario_put( id:str = Path(...), body:usuario_model.Usuario_update = B
 async def usuario_post(body: usuario_model.Usuario_In = Body(..., embed=True)):
     return usuario.post_usuario(body)
 
-@router.delete('/delete/{id}', response_model=usuario_model.Usuario_Out, dependencies=[Depends(rol_verify)])
+lista_depends.append(Depends(rol_verify))
+@router.delete('/delete/{id}', response_model=usuario_model.Usuario_Out, dependencies=lista_depends)
 async def usuario_delete(id:str = Path(...) ):
     return usuario.delete_usuario(id)
