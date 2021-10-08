@@ -7,6 +7,7 @@ from fastapi.param_functions import Query
 from controllers.usuarios import Usuarios
 from models import usuario as usuario_model
 from helpers.dependencias.dependencias_generales import verify_mongoId, verify_id_In_bd
+from helpers.dependencias.db_dependencias import rol_verify
 
 router = APIRouter(
     prefix='/usuarios',
@@ -37,6 +38,6 @@ async def usuario_put( id:str = Path(...), body:usuario_model.Usuario_update = B
 async def usuario_post(body: usuario_model.Usuario_In = Body(..., embed=True)):
     return usuario.post_usuario(body)
 
-@router.delete('/delete/{id}', response_model=usuario_model.Usuario_Out, dependencies=lista_depends)
+@router.delete('/delete/{id}', response_model=usuario_model.Usuario_Out, dependencies=[Depends(rol_verify)])
 async def usuario_delete(id:str = Path(...) ):
     return usuario.delete_usuario(id)

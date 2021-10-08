@@ -1,7 +1,6 @@
-
-
 from fastapi import Depends, HTTPException
 from bson import ObjectId
+from fastapi import UploadFile, File
 
 from db.config import db
 
@@ -35,3 +34,15 @@ def verify_id_In_bd( id:str ):
             'ok':False,
             'msg':f'El id esta inhabilitado: {id}'
         })
+
+def verify_type_img( file: UploadFile = File(...)):
+    tipo_extencion = file.filename.split('.')[-1];
+    #obtener la extencion del archivo png, jpeg, jpg
+    extenciones_validas = ['png', 'jpeg', 'jpg']
+    
+    if tipo_extencion not in extenciones_validas:
+        raise HTTPException(status_code=400, detail={
+            'ok': False,
+            'msg': 'Archivo de imagen no válida'
+        })
+    
