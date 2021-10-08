@@ -16,8 +16,8 @@ def jwt_encode(id:str):
     try:
         token = jwt.encode(data,SECRET_KEY,algorithm=ALGORITHM)
         return token        
-    except :
+    except : #agregar exception para cada caso que pueda generar el token
         raise
 
 def jwt_decode():
-    toke = jwt.va
+    pass

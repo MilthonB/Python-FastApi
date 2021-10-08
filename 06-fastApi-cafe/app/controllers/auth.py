@@ -1,14 +1,9 @@
-from threading import local
-from fastapi import Body, HTTPException
+from fastapi import HTTPException
 from passlib.hash import bcrypt
-from localStoragePy import localStoragePy
-from starlette.responses import JSONResponse
 
 from models.auth import Auth_In
 from db.config import db 
 from helpers.generar_jwt import jwt_encode
-
-localStorage = localStoragePy('Api-cafe','storage-token')
 
 class Auth(object):
     
@@ -20,13 +15,13 @@ class Auth(object):
         if not usuario:
             raise HTTPException(status_code=400, detail={
                 'ok': False,
-                'msg': 'Correo no registrado'
+                'msg': 'Correo / Contraseña incorrectas' 
             })
 
         elif usuario['estado'] == False:
             raise HTTPException(status_code=400, detail={
                 'ok': False,
-                'msg': 'Correo no inactivo'
+                'msg': 'Correo inactivo'
             })
 
         elif usuario:
@@ -34,6 +29,7 @@ class Auth(object):
             validacion = bcrypt.verify(password, usuario['password'])
             
             if validacion:
+                
                 token = jwt_encode(str(usuario['_id']))
                 response.set_cookie(key="token", value=token)
 
@@ -41,7 +37,7 @@ class Auth(object):
             else:
                 raise HTTPException(status_code=400, detail={
                 'ok': False,
-                'msg': 'Contraseña incorrecta'
+                'msg': 'Correo / Contraseña incorrectas'
             })
             
 
