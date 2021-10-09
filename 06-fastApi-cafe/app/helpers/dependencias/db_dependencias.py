@@ -27,7 +27,24 @@ def rol_verify(id: str):
         })
         
 def producto_verify(body):
-    ...
+    producto_id = body['producto']
+    producto = db.coleccion_productos.find_one({'_id':ObjectId(producto_id)})
+    
+    if not producto:
+        raise HTTPException(status_code=400, detail={
+            'ok': False,
+            'msg': f'El Producto no existe'
+        })
+    
 
 def categoria_verify(body):
-    ...
+    categoria_id = body['categoria']
+    categoria = db.coleccion_categorias.find_one({'_id':ObjectId(categoria_id)})
+    
+    if not categoria:
+        raise HTTPException(status_code=400, detail={
+            'ok': False,
+            'msg': f'La Categoria no existe'
+        })
+    
+    

@@ -33,7 +33,6 @@ def jwt_decode( x_token: str = Header(..., convert_underscores=False) ):
     
     try:
         token_verify = jwt.decode(x_token,SECRET_KEY,algorithms=['HS256'])
-        return token_verify
     except exceptions.JWTError:  #agregar exception para cada caso que pueda generar el token
         raise HTTPException(status_code=400, detail={
             'ok': False,
