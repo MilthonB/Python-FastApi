@@ -27,7 +27,7 @@ async def productos_get(limit:Optional[int] = Query(10), skip:Optional[int] = Qu
     resp = await producto.get_productos(limit, skip)
     return resp
 
-@router.get('/get/{id}',response_model= producto_model.Productos_Out, dependencies=lista_depends)
+@router.get('/get/{id}',response_model= producto_model.Productos_Out, dependencies=[Depends(db_deps.producto_verify)])
 async def producto_get(id:str = Path(...), x_token:str = Header(..., convert_underscores=False )):
     resp = await producto.get_producto(id) 
     return resp
@@ -48,4 +48,3 @@ async def producto_delete(id:str = Path(...) , x_token:str = Header(...,  conver
 async def producto_post(body: producto_model.Productos_Base = Body(..., embed=True)):
     resp = await producto.post_producto(body)
     return resp
-    # return categoria.post_categoria(body)

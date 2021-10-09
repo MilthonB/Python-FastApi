@@ -1,6 +1,6 @@
 
 #Verificar los roles 
-from fastapi import HTTPException, Body
+from fastapi import HTTPException, Body, Path
 from bson import ObjectId
 from typing import Optional
 
@@ -72,6 +72,14 @@ def usuario_verify(id:Optional[str] = None, body = Body(None, embed=True)):
             })
         
 
-def producto_verify():
-    ...
+def producto_verify(id:str = Path(...)):
+    
+    producto = db.coleccion_productos.find_one({'_id': ObjectId(id)})
+    
+    if not producto or producto['estado'] == False or producto['disponible'] == False:
+         raise HTTPException(status_code=400, detail={
+                'ok': False,
+                'msg': f'El Producto no existe'
+            })
+    
     
