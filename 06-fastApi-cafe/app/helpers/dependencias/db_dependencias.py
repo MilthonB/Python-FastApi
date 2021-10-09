@@ -25,3 +25,9 @@ def rol_verify(id: str):
             'ok': False,
             'msg': f'Rol no permitido, necesitas ser ADIMN'
         })
+        
+def producto_verify(body):
+    ...
+
+def categoria_verify(body):
+    ...
