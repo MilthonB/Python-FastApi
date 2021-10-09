@@ -19,7 +19,8 @@ producto = Productos()
 
 lista_depends=[
     Depends(verify_mongoId),
-    Depends(jwt_decode)
+    Depends(jwt_decode),
+    Depends(db_deps.producto_verify)
 ]
 
 @router.get('/get/', response_model= List[producto_model.Productos_Out])
@@ -27,7 +28,7 @@ async def productos_get(limit:Optional[int] = Query(10), skip:Optional[int] = Qu
     resp = await producto.get_productos(limit, skip)
     return resp
 
-@router.get('/get/{id}',response_model= producto_model.Productos_Out, dependencies=[Depends(db_deps.producto_verify)])
+@router.get('/get/{id}',response_model= producto_model.Productos_Out, dependencies=lista_depends)
 async def producto_get(id:str = Path(...), x_token:str = Header(..., convert_underscores=False )):
     resp = await producto.get_producto(id) 
     return resp
