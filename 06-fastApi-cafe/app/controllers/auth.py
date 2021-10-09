@@ -32,8 +32,9 @@ class Auth(object):
                 
                 token = jwt_encode(str(usuario['_id']))
                 response.set_cookie(key="token", value=token)
-
+                usuario.update({'token': token})
                 return usuario
+            
             else:
                 raise HTTPException(status_code=400, detail={
                 'ok': False,

@@ -1,4 +1,4 @@
-from jose import jwt
+from jose import jwt, exceptions
 from fastapi import Header, HTTPException
 import time 
 
@@ -11,30 +11,30 @@ def jwt_encode(id:str):
     # Una hora de duracion para expirar tiene este token 
     data = {
         'id': id,
-        'exp': int(time)+3600
+        'exp': int(time.time())+3600
     }
 
     try:
         token = jwt.encode(data,SECRET_KEY,algorithm=ALGORITHM)
-        return token        
-    except jwt.exceptions.ExpiredSignatureError: #agregar exception para cada caso que pueda generar el token
+        return token
+    except exceptions.ExpiredSignatureError: #agregar exception para cada caso que pueda generar el token
         raise HTTPException(status_code=400, detail={
             'ok': False,
             'msg': 'Toke a caducado'
         })
-    except jwt.exceptions.InvalidSignatureError:
+    except exceptions.JWTError:
         raise HTTPException(status_code=400, detail={
             'ok': False,
             'msg': 'Toke no coincide'
         })
         
         
-def jwt_decode( x_token: Header ):
+def jwt_decode( x_token: str = Header(..., convert_underscores=False) ):
     
     try:
-        token_verify = jwt_decode(x_token,SECRET_KEY,algorithms=[ALGORITHM])
+        token_verify = jwt.decode(x_token,SECRET_KEY,algorithms=['HS256'])
         return token_verify
-    except jwt.exceptions.InvalidTokenError:  #agregar exception para cada caso que pueda generar el token
+    except exceptions.JWTError:  #agregar exception para cada caso que pueda generar el token
         raise HTTPException(status_code=400, detail={
             'ok': False,
             'msg': 'Toke inválido'

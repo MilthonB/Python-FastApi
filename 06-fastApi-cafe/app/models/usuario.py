@@ -20,6 +20,7 @@ class Usuario_In(Usuarios_Base):
 
 class Usuario_Out(Usuarios_Base):
     id: Optional[PyObjectId] = Field(alias='_id')
+    token: Optional[str] = 'Sin token'
 
     class Config:
         arbitrary_types_allowed = True

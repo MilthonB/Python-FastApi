@@ -1,5 +1,5 @@
 
-from fastapi import APIRouter, Body, Path, Depends
+from fastapi import APIRouter, Body, Path, Depends, Header
 from typing import Optional, List
 
 from fastapi.param_functions import Query
@@ -8,6 +8,7 @@ from controllers.usuarios import Usuarios
 from models import usuario as usuario_model
 from helpers.dependencias.dependencias_generales import verify_mongoId, verify_id_In_bd
 from helpers.dependencias.db_dependencias import rol_verify
+from helpers.dependencia_jwt import jwt_decode
 
 router = APIRouter(
     prefix='/usuarios',
@@ -39,6 +40,7 @@ async def usuario_post(body: usuario_model.Usuario_In = Body(..., embed=True)):
     return usuario.post_usuario(body)
 
 lista_depends.append(Depends(rol_verify))
+lista_depends.append(Depends(jwt_decode))
 @router.delete('/delete/{id}', response_model=usuario_model.Usuario_Out, dependencies=lista_depends)
-async def usuario_delete(id:str = Path(...) ):
+async def usuario_delete(id:str = Path(...), x_token: str = Header(..., convert_underscores=False) ):
     return usuario.delete_usuario(id)
