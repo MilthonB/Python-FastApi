@@ -7,7 +7,8 @@ from controllers.productos import Productos
 from models import producto as producto_model 
 
 from helpers.dependencias.dependencias_generales import verify_mongoId
-from  helpers.dependencia_jwt import jwt_decode
+from helpers.dependencia_jwt import jwt_decode
+from helpers.dependencias import db_dependencias as db_deps
 
 router = APIRouter(
     prefix='/productos',
@@ -36,14 +37,15 @@ async def producto_put( id:str = Path(...), body = Body(...), x_token:str = Head
     resp = await producto.update_producto(id, body) 
     return resp
 
-@router.post('/post/', response_model=producto_model.Productos_Out, dependencies=[Depends(jwt_decode)])
-async def producto_post(body: producto_model.Productos_Base = Body(..., embed=True)):
-    resp = await producto.post_producto(body)
-    return resp
-    # return categoria.post_categoria(body)
 
 @router.delete('/delete/{id}', response_model=producto_model.Productos_Out, dependencies=lista_depends)
 async def producto_delete(id:str = Path(...) , x_token:str = Header(...,  convert_underscores=False)):
     resp = await producto.delete_producto(id)
     return resp
 
+
+@router.post('/post/', response_model=producto_model.Productos_Out, dependencies=[Depends(jwt_decode), Depends(db_deps.categoria_verify), Depends(db_deps.usuario_verify)])
+async def producto_post(body: producto_model.Productos_Base = Body(..., embed=True)):
+    resp = await producto.post_producto(body)
+    return resp
+    # return categoria.post_categoria(body)

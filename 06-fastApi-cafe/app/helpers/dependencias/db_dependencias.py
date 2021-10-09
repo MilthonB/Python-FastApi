@@ -1,7 +1,8 @@
 
 #Verificar los roles 
-from fastapi import HTTPException
+from fastapi import HTTPException, Body
 from bson import ObjectId
+from typing import Optional
 
 from db.config import db
 
@@ -26,25 +27,51 @@ def rol_verify(id: str):
             'msg': f'Rol no permitido, necesitas ser ADIMN'
         })
         
-def producto_verify(body):
-    producto_id = body['producto']
-    producto = db.coleccion_productos.find_one({'_id':ObjectId(producto_id)})
+def categoria_verify( id: Optional[str] = None, body = Body(None, embed=True)): # Valores opcionales 
     
-    if not producto:
-        raise HTTPException(status_code=400, detail={
-            'ok': False,
-            'msg': f'El Producto no existe'
-        })
+    
+    if body:
+        id_categoria = body['categoria']
+        categoria = db.coleccion_categorias.find_one({'_id':ObjectId(id_categoria)})
+        if not categoria or categoria['estado'] == False:
+            raise HTTPException(status_code=400, detail={
+                'ok': False,
+                'msg': f'La categoia no existe'
+            })
+    
+    if id:
+        categoria = db.coleccion_categorias.find_one({'_id':ObjectId(id)})
+        if not categoria or categoria['estado'] == False:
+            raise HTTPException(status_code=400, detail={
+                'ok': False,
+                'msg': f'La categoia no existe'
+            })
+    
     
 
-def categoria_verify(body):
-    categoria_id = body['categoria']
-    categoria = db.coleccion_categorias.find_one({'_id':ObjectId(categoria_id)})
+def usuario_verify(id:Optional[str] = None, body = Body(None, embed=True)):
+    # Verificar usuarios si existe el usuario entonces pudes continuar 
+    if body:
+        id_usuario = body['usuario']
+        
+        usuario = db.coleccion_usuarios.find_one({'_id':ObjectId(id_usuario)})
+
+        if not usuario or usuario['estado'] == False:
+            raise HTTPException(status_code=400, detail={
+                'ok': False,
+                'msg': f'El usuario no existe'
+            })
     
-    if not categoria:
-        raise HTTPException(status_code=400, detail={
-            'ok': False,
-            'msg': f'La Categoria no existe'
-        })
-    
+    if id:
+        usuario = db.coleccion_usuarios.find_one({'_id':ObjectId(id)})
+
+        if not usuario or usuario['estado'] == False:
+            raise HTTPException(status_code=400, detail={
+                'ok': False,
+                'msg': f'El usuario no existe'
+            })
+        
+
+def producto_verify():
+    ...
     
