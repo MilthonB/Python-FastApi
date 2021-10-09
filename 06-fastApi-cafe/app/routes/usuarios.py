@@ -9,6 +9,7 @@ from models import usuario as usuario_model
 from helpers.dependencias.dependencias_generales import verify_mongoId, verify_id_In_bd
 from helpers.dependencias.db_dependencias import rol_verify
 from helpers.dependencia_jwt import jwt_decode
+from helpers.dependencias import db_dependencias as db_depns
 
 router = APIRouter(
     prefix='/usuarios',
@@ -19,7 +20,9 @@ usuario = Usuarios()
 
 lista_depends = [
     Depends(verify_mongoId), 
-    Depends(verify_id_In_bd)
+    Depends(verify_id_In_bd),
+    Depends(jwt_decode),
+    Depends(db_depns.usuario_verify)
 ]
 
 @router.get('/get/', response_model= List[usuario_model.Usuario_Out])

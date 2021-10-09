@@ -9,6 +9,7 @@ from models import categoria as categoria_model
 
 from helpers.dependencias.dependencias_generales import verify_mongoId 
 from helpers.dependencias import db_dependencias as db_depns
+from helpers.dependencia_jwt import jwt_decode
 
 router = APIRouter(
     prefix='/categorias',
@@ -19,7 +20,8 @@ categoria = Categorias()
 
 lista_dependencias = [
     Depends(verify_mongoId),
-    Depends(db_depns.categoria_verify)
+    Depends(db_depns.categoria_verify),
+    Depends(jwt_decode)
 ]
 
 @router.get('/get/', response_model= List[categoria_model.Categorias_Out])
@@ -37,7 +39,7 @@ async def categoria_put( id:str = Path(...), body = Body(...) ):
     resp = await categoria.update_categoria(id, body) 
     return resp
 
-@router.post('/post/', response_model=categoria_model.Categorias_Out)
+@router.post('/post/', response_model=categoria_model.Categorias_Out, dependencies=[Depends(db_depns.usuario_verify), Depends(jwt_decode)])
 async def categoria_post(body: categoria_model.Categorias_Base = Body(..., embed=True)):
     resp = await categoria.post_categoria(body)
     return resp
