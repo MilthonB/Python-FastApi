@@ -1,11 +1,13 @@
 
 
-from sys import setswitchinterval
 import cloudinary
+import uuid
 from fastapi import File, UploadFile
 from dotenv import dotenv_values
+from cloudinary.uploader import upload, destroy
+from bson import ObjectId
 
-from cloudinary.uploader import upload
+from db.config import db
 
 config = dotenv_values()
 
@@ -21,6 +23,10 @@ cloudinary.config(
 )
 
 class Img(object): 
+    
+    def __init__(self):
+        self.coleccion_usuario = db.coleccion_usuarios
+        self.coleccion_producto = db.coleccion_productos
 
     def get_img(self, id:str):
         return {
@@ -32,31 +38,46 @@ class Img(object):
             'img':'Se actualizó la img'
         }
 
-    def post_img(self, coleccion: str, id: str, file: UploadFile):
-        #Mandar la url de la foto almacenada en la file de la root
-        # cloudinary.uploade.upload("/home/dotmb/Descargas/goku.png")
-        # file.file = Al elemento temprario, es decir donde esta la img temporalmenta antes de su descarga o carga, en este caso carga
+    def subir_img(self, coleccion: str, id: str, file: UploadFile, public_id: str ):
+       
+        return upload(
+            file.file,
+            public_id = public_id,
+            folder = f"{coleccion}/{id}/", 
+            tags=id
+        )
         
-        #Crear folders ejemplo: productos/id/foto
-        #Crear folders ejemplo: categorias/id/foto
-
-        obj = {}
-        if coleccion == 'productos':
-            obj=self.subir_img(coleccion, id, file)
-            # obj['secure_url'] guardar en el producto img str
-        elif coleccion == 'categorias':
-            obj=self.subir_img(coleccion, id, file)
-            # obj['secure_url'] guardar en el producto img str
+    
+       
+    def post_img(self, coleccion: str, id: str, file: UploadFile):
+        
+        if coleccion == 'usuario':
+            usuario = self.coleccion_usuario.find_one({'_id':ObjectId(id)})
+            
+            if usuario['img']:
+                destroy(usuario['img'].split('/')[-1])
+                            
+            obj=self.subir_img(coleccion, id, file, public_id='img-perfil')
+            nombre = obj['secure_url']
+    
+            self.coleccion_usuario.find_one_and_update({'_id':ObjectId(id)}, {'$set':{'img':nombre}})
+            
+        elif coleccion == 'producto':
+            
+            producto = self.coleccion_producto.find_one({'_id':ObjectId(id)})
+            
+            if producto['img']:
+                destroy(producto['img'].split('/')[-1]) 
+                            
+            obj=self.subir_img(coleccion, id, file,public_id='img-producto')
+            nombre = obj['secure_url']
+    
+            self.coleccion_producto.find_one_and_update({'_id':ObjectId(id)}, {'$set':{'img':nombre}})
+            
+            
 
         return {
             'img':'Se creó una img'
         }
         
     
-    def subir_img(self, coleccion: str, id: str, file: UploadFile ):
-        return upload(
-            file.file,
-            public_id = file.filename,
-            folder = f"{coleccion}/{id}/", 
-            tags=id
-        )

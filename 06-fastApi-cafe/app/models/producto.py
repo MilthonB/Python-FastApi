@@ -6,12 +6,13 @@ from helpers.pyobjectId import PyObjectId
 
 class Productos_Base(BaseModel):
     nombre: str
+    img: Optional[str] = None
     categoria: PyObjectId
-    estado: Optional[bool] = True
     usuario: PyObjectId
     precio: Optional[float] = 100.0
+    estado: Optional[bool] = True
     disponible: Optional[bool] = True 
-
+    
 
 class Productos_Out(Productos_Base):
     id: Optional[PyObjectId] = Field(alias='_id')

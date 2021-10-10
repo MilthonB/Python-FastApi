@@ -44,7 +44,7 @@ async def producto_delete(id:str = Path(...) , x_token:str = Header(...,  conver
     resp = await producto.delete_producto(id)
     return resp
 
-
+#Modificar las dependencias para que no pida informacion inecesarias 
 @router.post('/post/', response_model=producto_model.Productos_Out, dependencies=[Depends(jwt_decode), Depends(db_deps.categoria_verify), Depends(db_deps.usuario_verify)])
 async def producto_post(body: producto_model.Productos_Base = Body(..., embed=True)):
     resp = await producto.post_producto(body)

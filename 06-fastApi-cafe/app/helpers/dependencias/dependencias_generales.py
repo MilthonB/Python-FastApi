@@ -5,7 +5,7 @@ from fastapi import UploadFile, File
 from db.config import db
 
 
-lista_colecciones = ['productos','categorias']
+lista_colecciones = ['producto','usuario']
 def verify_coleccion(coleccion: str):
     print(coleccion)
     if coleccion not in lista_colecciones:

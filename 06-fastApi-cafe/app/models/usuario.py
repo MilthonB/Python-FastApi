@@ -7,8 +7,8 @@ from helpers.pyobjectId import PyObjectId
 class Usuarios_Base(BaseModel):
     nombre: str
     correo: EmailStr
-    img: str
-    rol: str
+    rol: Optional[str] = 'USER_ROLE'
+    img: Optional[str] = None
     estado: Optional[bool] = True
     google: Optional[bool] = False
 
