@@ -59,3 +59,18 @@ def productos_busqueda(productos):
         })
         
     return arreglo_productos
+
+def roles_busqueda(roles):
+    arreglo_roles = []
+
+    for rol in roles:
+        
+        id_str = str(rol['_id'])
+        del rol['_id']
+        
+        arreglo_roles.append({
+            '_id': id_str,
+            **rol
+        })
+        
+    return arreglo_roles
