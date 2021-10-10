@@ -1,9 +1,8 @@
 
 import re
-from fastapi import Body, HTTPException, Path
+from fastapi import HTTPException, Path
 from bson import ObjectId
-
-from models.categoria import Categorias_Base
+import schemas.usuarios_busqueda
 from db.config import db
 
 
@@ -14,6 +13,9 @@ class Buscador(object):
         self.coleccion_producto = db.coleccion_productos
         self.coleccion_categoria = db.coleccion_categorias
         self.coleccion_rol = db.coleccion_roles
+        
+        self.schema = schemas.usuarios_busqueda
+        
         self.colecciones = [
             'usuarios',
             'categorias',
@@ -21,21 +23,24 @@ class Buscador(object):
             'roles'
         ]
 
+   
     async def buscar_usuario(self, termino: str):
         # se puede buscar por
         
         # id
         if ObjectId.is_valid(termino):
-            usuario = self.coleccion_usuario.find_one({'_id': termino})
+            usuario = self.coleccion_usuario.find({'_id': ObjectId(termino)})
+            usuario = self.schema.usuarios_busqueda(usuario)
             return usuario
         
         # nombre
         # Busqueda insensible
         regex_termino = re.compile(termino, re.I)
-        usuario = self.coleccion_usuario.find_one({
+        usuario = self.coleccion_usuario.find({
             '$or':[{'nombre': { '$regex': regex_termino}}, {'correo': { '$regex': regex_termino}}],
             '$and':[{'estado':True}]
         })
+        
         
         if usuario == None:
             return {
@@ -43,15 +48,20 @@ class Buscador(object):
                 'msg': 'No se encotro el usuario'
             }
         
+        usuario = self.schema.usuarios_busqueda(usuario)
         return usuario 
         
         # correo
         
     async def buscar_categoria(self, termino: str): 
-        # se puede buscar por 
+        # se puede buscar por
+         
         # id 
+         if ObjectId.is_valid(termino):
+            categoria = self.coleccion_categoria.find_one({'_id': termino})
+            return categoria
+        
         # nombre
-        ... 
 
     async def buscar_producto(self, termino: str):
         # se puede buscar por 
