@@ -59,7 +59,6 @@ class Buscador(object):
         # id 
         if ObjectId.is_valid(termino):
             categoria = self.coleccion_categoria.find({'_id': ObjectId(termino)})
-            print(categoria)
             categoria = self.schema.categorias_busqueda(categoria)
             return categoria
         
@@ -84,8 +83,28 @@ class Buscador(object):
     async def buscar_producto(self, termino: str):
         # se puede buscar por 
         # id 
+        print(termino)
+        if ObjectId.is_valid(termino):
+            producto = self.coleccion_producto.find({'_id': ObjectId(termino)})
+            print(producto)
+            producto = self.schema.productos_busqueda(producto)
+            return producto
+        
         # nombre
-        ...
+        regex_termino = re.compile(termino, re.I)
+        
+        productos = self.coleccion_producto.find({
+            'nombre': {'$regex': regex_termino}, 'estado':True, 'disponible': True
+        })
+        
+        
+        productos = self.schema.productos_busqueda(productos)
+        if productos == []:
+            return {
+                'ok': False,
+                'msg': 'No se encotro la categoria'
+            }
+        return productos
 
     async def buscar_rol(self, termino: str): 
         #  se puede buscar por 

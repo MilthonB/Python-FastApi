@@ -36,3 +36,26 @@ def categorias_busqueda(categorias):
         })
         
     return arreglo_categorias
+
+
+def productos_busqueda(productos):
+    
+    arreglo_productos = []
+
+    for pro in productos:
+        
+        id_str = str(pro['_id'])
+        del pro['_id']
+        id_usuario = str(pro['usuario'])
+        del pro['usuario']
+        id_categoria = str(pro['categoria'])
+        del pro['categoria']
+        
+        arreglo_productos.append({
+            '_id': id_str,
+            '_id_usuario': id_usuario,
+            '_id_categoria': id_categoria,
+            **pro
+        })
+        
+    return arreglo_productos
