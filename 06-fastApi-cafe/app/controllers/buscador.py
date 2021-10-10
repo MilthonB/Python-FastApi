@@ -2,7 +2,7 @@
 import re
 from fastapi import HTTPException, Path
 from bson import ObjectId
-import schemas.usuarios_busqueda
+import schemas.schemas_busqueda
 from db.config import db
 
 
@@ -14,7 +14,7 @@ class Buscador(object):
         self.coleccion_categoria = db.coleccion_categorias
         self.coleccion_rol = db.coleccion_roles
         
-        self.schema = schemas.usuarios_busqueda
+        self.schema = schemas.schemas_busqueda
         
         self.colecciones = [
             'usuarios',
@@ -42,13 +42,13 @@ class Buscador(object):
         })
         
         
-        if usuario == None:
+        
+        usuario = self.schema.usuarios_busqueda(usuario)
+        if usuario == []:
             return {
                 'ok': False,
                 'msg': 'No se encotro el usuario'
             }
-        
-        usuario = self.schema.usuarios_busqueda(usuario)
         return usuario 
         
         # correo
@@ -57,12 +57,30 @@ class Buscador(object):
         # se puede buscar por
          
         # id 
-         if ObjectId.is_valid(termino):
-            categoria = self.coleccion_categoria.find_one({'_id': termino})
+        if ObjectId.is_valid(termino):
+            categoria = self.coleccion_categoria.find({'_id': ObjectId(termino)})
+            print(categoria)
+            categoria = self.schema.categorias_busqueda(categoria)
             return categoria
         
         # nombre
-
+        
+        regex_termino = re.compile(termino, re.I)
+        
+        categorias = self.coleccion_categoria.find({
+            'nombre': {'$regex': regex_termino}, 'estado':True
+        })
+        
+        
+        categorias = self.schema.categorias_busqueda(categorias)
+        if categorias == []:
+            return {
+                'ok': False,
+                'msg': 'No se encotro la categoria'
+            }
+        return categorias
+    
+    
     async def buscar_producto(self, termino: str):
         # se puede buscar por 
         # id 
