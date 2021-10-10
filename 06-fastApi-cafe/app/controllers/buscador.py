@@ -120,7 +120,7 @@ class Buscador(object):
             'rol': {'$regex': regex_termino}
         })
         
-        
+         
         roles = self.schema.roles_busqueda(roles)
         if roles == []:
             return {
