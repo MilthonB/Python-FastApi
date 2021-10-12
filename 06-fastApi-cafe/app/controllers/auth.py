@@ -1,5 +1,9 @@
-from fastapi import HTTPException
+from fastapi import HTTPException, Body
 from passlib.hash import bcrypt
+
+from google.auth.transport import requests
+from google.oauth2 import id_token
+
 
 from models.auth import Auth_In
 from db.config import db 
@@ -40,5 +44,13 @@ class Auth(object):
                 'ok': False,
                 'msg': 'Correo / Contraseña incorrectas'
             })
-            
+    
+    
+    async def google(self, token):
+        request = requests.Request()
+        try:
+            decoded_token = id_token.verify_token(str(token['id_token']),request)
+            print('Valido')
+        except ValueError as msg:
+            print(msg)
 

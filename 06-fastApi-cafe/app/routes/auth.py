@@ -10,7 +10,7 @@ from localStoragePy import localStoragePy
 from models.auth import Auth_In
 from models.usuario import Usuario_Out
 
-router = APIRouter( tags=['Login'] )
+router = APIRouter( prefix='/api', tags=['Login'] )
 
 auth = Auth()
 
@@ -18,6 +18,12 @@ auth = Auth()
 async def login( response: Response, body: Auth_In = Body(...) ):
     resp = await auth.login(body,response)
     return resp
+
+@router.post('/google')
+async def login( token = Body(...) ):
+    # print(body)
+    resp = await auth.google(token)
+    return []
 
 
 # @router.post("/cookie-and-object/")
