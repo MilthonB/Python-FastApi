@@ -19,11 +19,11 @@ async def login( response: Response, body: Auth_In = Body(...) ):
     resp = await auth.login(body,response)
     return resp
 
-@router.post('/google')
+@router.post('/google', response_model=Usuario_Out)
 async def login( token = Body(...) ):
-    # print(body)
     resp = await auth.google(token)
-    return []
+    
+    return resp
 
 
 # @router.post("/cookie-and-object/")
