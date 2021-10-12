@@ -7,16 +7,6 @@ from models import usuario
 from db.config import db
 
 
-""" 
-Dependencias:
-    el id tiene que existir en la base de datos
-    y el rol tiene que ser admin para poder hacert put post y delete = PENDIENTE
-    contraseña tiene que tener un cierto rango => AGREGADO EN LOS MODELOS
-    el correo tiene que ser un correo email válido => AGREGADO EN LOS MODELOS
-    jwt válido también en el delete = PENDIENTE
-"""
-
-
 class Usuarios(object):
 
     def __init__(self):
@@ -60,23 +50,12 @@ class Usuarios(object):
 
     async def update_usuario(self,id: str, body: usuario.Usuario_update):
 
-        # if type(body) is not dict:
-        #     raise HTTPException(status_code=400, detail={
-        #         'msg':'El cuerpo del body no es un objeto o diccinario'
-        #     })
-        
-        # verificar y sacar los valores que no pueden ser modificados por el usuario 
-        # No se puede modificar el esatado, ni la contraseñ(En este caso)
-        # Solo se permite modificar el nombre y la img
-        # El rol solo lo puede cambiar quien tenga permisos de admin
-        
         self.coleccion.find_one_and_update({'_id': ObjectId(id)}, {'$set':body.dict()})
         usuario = self.coleccion.find_one({'_id': ObjectId(id)})
         return usuario
 
     def delete_usuario(self, id: str):
 
-        # usuario = self.coleccion.find_one_and_delete({'_id': ObjectId(id)})
         self.coleccion.find_one_and_update({'_id': ObjectId(id)}, {'$set':{'estado':False}})
         usuario = self.coleccion.find_one({'_id': ObjectId(id)})
 

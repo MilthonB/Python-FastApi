@@ -23,7 +23,7 @@ cloudinary.config(
 )
 
 
-#Código repetido optimizar 
+# Código repetido optimizar
 
 class Img(object):
 
@@ -31,89 +31,50 @@ class Img(object):
         self.coleccion_usuario = db.coleccion_usuarios
         self.coleccion_producto = db.coleccion_productos
 
-    def get_img(self, coleccion: str, id: str):
-
+    def verificar_coleccion(self, coleccion: str, id: str):
         if coleccion == 'usuario':
             usuario = self.coleccion_usuario.find_one({'_id': ObjectId(id)})
 
-            if not usuario['img'] or not usuario:
+            if not usuario:
                 raise HTTPException(status_code=400, detail={
                     'ok': False,
-                    'img': 'Imagen no encotrada'
+                    'img': 'Id no válido'
                 })
-
-            return {
-                '_id': str(usuario['_id']),
-                'img': usuario['img']
-            }
+            return usuario
 
         elif coleccion == 'producto':
             producto = self.coleccion_producto.find_one({'_id': ObjectId(id)})
 
-            if not producto['img'] or not producto:
+            if not producto:
                 raise HTTPException(status_code=400, detail={
                     'ok': False,
-                    'img': 'Imagen no encotrada'
+                    'img': 'Id no válido'
                 })
 
-            return {
-                'img': 'Se actualizó la imagen'
-            }
+            return producto
 
         else:
             raise HTTPException(status_code=400, detail={
                 'ok': False,
                 'msg': f'La colección: {coleccion} no exite, debe de pertenecer a: [usuario, producto]'
             })
+            
+    def update_post_img(self,coleccion, id, file):
+        coleccion_verificada = self.verificar_coleccion(coleccion, id)
 
-        return {
-            'img': 'Se envío la img'
-        }
+        if coleccion_verificada['img']:
+             destroy(coleccion_verificada['img'].split('/')[-1])
 
-    def update_img(self, coleccion: str, id: str, file: UploadFile):
 
+        obj = self.subir_img(coleccion, id, file, public_id='img-coleccion')
+        nombre = obj['secure_url']
+        
         if coleccion == 'usuario':
-            usuario = self.coleccion_usuario.find_one({'_id': ObjectId(id)})
-
-            if not usuario['img'] or not usuario:
-                raise HTTPException(status_code=400, detail={
-                    'ok': False,
-                    'img': 'Imagen no encotrada'
-                })
-
-            obj = self.subir_img(coleccion, id, file, public_id='img-perfil')
-            nombre = obj['secure_url']
             self.coleccion_usuario.find_one_and_update(
                 {'_id': ObjectId(id)}, {'$set': {'img': nombre}})
-
-            return {
-                'img': 'se actualizó la img'
-            }
-
         elif coleccion == 'producto':
-            producto = self.coleccion_producto.find_one({'_id': ObjectId(id)})
-
-            if not producto['img'] or not producto:
-                raise HTTPException(status_code=400, detail={
-                    'ok': False,
-                    'img': 'Imagen no encotrada'
-                })
-
-            obj = self.subir_img(coleccion, id, file, public_id='img-producto')
-            nombre = obj['secure_url']
-            
             self.coleccion_producto.find_one_and_update(
                 {'_id': ObjectId(id)}, {'$set': {'img': nombre}})
-
-            return {
-                'img': 'se actualizó la img'
-            }
-
-        else:
-            raise HTTPException(status_code=400, detail={
-                'ok': False,
-                'msg': f'La colección: {coleccion} no exite, debe de pertenecer a: [usuario, producto]'
-            })
 
     def subir_img(self, coleccion: str, id: str, file: UploadFile, public_id: str):
 
@@ -124,38 +85,29 @@ class Img(object):
             tags=id
         )
 
+
+
+    def get_img(self, coleccion: str, id: str):
+
+        coleccion = self.verificar_coleccion(coleccion, id)
+        return {
+                '_id': str(coleccion['_id']),
+                'img': coleccion['img']
+            }
+
+    def update_img(self, coleccion: str, id: str, file: UploadFile):
+
+        self.update_post_img(coleccion, id, file)
+        return {
+            'img': 'se actualizó la img'
+        }
+
+    
     def post_img(self, coleccion: str, id: str, file: UploadFile):
 
-        if coleccion == 'usuario':
-            usuario = self.coleccion_usuario.find_one({'_id': ObjectId(id)})
-
-            if usuario['img']:
-                destroy(usuario['img'].split('/')[-1])
-
-            obj = self.subir_img(coleccion, id, file, public_id='img-perfil')
-            nombre = obj['secure_url']
-
-            self.coleccion_usuario.find_one_and_update(
-                {'_id': ObjectId(id)}, {'$set': {'img': nombre}})
-
-        elif coleccion == 'producto':
-
-            producto = self.coleccion_producto.find_one({'_id': ObjectId(id)})
-
-            if producto['img']:
-                destroy(producto['img'].split('/')[-1])
-
-            obj = self.subir_img(coleccion, id, file, public_id='img-producto')
-            nombre = obj['secure_url']
-
-            self.coleccion_producto.find_one_and_update(
-                {'_id': ObjectId(id)}, {'$set': {'img': nombre}})
-        else:
-            raise HTTPException(status_code=400, detail={
-                'ok': False,
-                'msg': f'La colección: {coleccion} no exite, debe de pertenecer a: [usuario, producto]'
-            })
+        self.update_post_img(coleccion, id, file)
+       
         return {
-            'ok': False,
+            'ok': True,
             'msg': 'Se creó una img'
         }
