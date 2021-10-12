@@ -23,8 +23,6 @@ cloudinary.config(
 )
 
 
-# Código repetido optimizar
-
 class Img(object):
 
     def __init__(self):
