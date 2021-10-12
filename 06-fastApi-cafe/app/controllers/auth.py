@@ -55,12 +55,7 @@ class Auth(object):
         
         coleccion_usuario = db.coleccion_usuarios
         
-        # picture
-        # email
-        # name
-        
-        try:
-            
+        try:    
             decoded_token = id_token.verify_token(str(token['id_token']),request)
             
             img = decoded_token['picture']
