@@ -16,7 +16,7 @@ class Conexion(object):
 
     @property
     def coleccion_usuarios(self):
-        self.__data_base.usuarios.create_index('correo', unique=True)
+        self.__data_base.usuarios.create_index('correo', unique=True) 
         return self.__data_base.usuarios
 
     @property
