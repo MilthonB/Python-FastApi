@@ -36,8 +36,8 @@ Cada directorio representa una etapa de implementación técnica:
 
 ---
 
-## 👤 Ingeniero
 
+## 👨‍💻 Autor
 **MilthonB** [![GitHub](https://img.shields.io/badge/GitHub-Profile-181717?style=flat&logo=github)](https://github.com/MilthonB)
 
 > *Este es un repositorio de experimentación y mejores prácticas. Si estos ejemplos te sirven de base, una ⭐️ es el mejor apoyo.*
